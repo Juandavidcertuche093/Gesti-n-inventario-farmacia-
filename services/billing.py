@@ -11,27 +11,28 @@ class FacturaService():
     def __init__(self, db) -> None:
         self.db = db
     
-    # def get_factura(self):
-    #     result = self.db.query(ModelFactura).all()
-    #     return result
-    
     def get_factura(self):
         result = self.db.query(ModelFactura).all()
-        # Verificar y manejar casos donde tipo_venta sea None
-        for factura in result:
-            for detalle in factura.detalles:
-                if detalle.tipo_venta is None:
-                    detalle.tipo_venta = 'unidad'  # Asignar un valor por defecto o manejar el error
         return result
+    
         
     def get_factura_by_id(self, idFactura):        
         result = self.db.query(ModelFactura).filter(ModelFactura.idfactura == idFactura).first()
         return result
     
-    def delete_factura(self, idFactura: int):        
-        self.db.query(ModelFactura).filter(ModelFactura.idfactura == idFactura).delete()
-        self.db.commit()
-        return True # Indicador de éxito
+
+    def delete_factura(self, idFactura: int):
+        # Obtener todos los detalles de la factura
+        detalles = self.db.query(ModelFacturaDetalle).filter(ModelFacturaDetalle.factura_id == idFactura).all()
+        for detalle in detalles:
+            self.db.delete(detalle)
+        # Eliminar la factura después de eliminar los detalles
+        factura = self.db.query(ModelFactura).filter(ModelFactura.idfactura == idFactura).first()
+        if factura:
+            self.db.delete(factura)
+            self.db.commit()
+            return True
+        return False
     
     def create_Factura(self, factura_data: FacturaCreate):
     # Crear factura
