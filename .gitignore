@@ -1,0 +1,16 @@
+# Variables de entorno
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Entornos virtuales
+around/
+
+# Archivos de log
+*.log
+
+# Configuración de editor
+.vscode/
+.idea/
