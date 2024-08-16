@@ -18,3 +18,4 @@ def login_super_user(user: User):
         return JSONResponse(status_code=200, content={'access_token': token})
     else:
         raise HTTPException(status_code=401, detail='Credenciales incorrectas')
+    
